@@ -86,63 +86,81 @@ class GnavState extends State<Gnav> {
         ),
         height: 70,
         // GNAV ICON
-        child: GNav(
-          gap: 5,
-          activeColor: Colors.white,
-          tabBackgroundColor: Color.fromARGB(255, 63, 93, 79),
-          padding: EdgeInsets.symmetric(horizontal: 20, vertical: 13.5),
-          selectedIndex: selectedIndex,
-          onTabChange: _onItemTapped,
-          tabs: const [
-            GButton(
-              icon: CupertinoIcons.house_fill,
-              iconSize: 35,
-              text: 'Beranda',
-              textStyle: TextStyle(
-                fontSize: 16,
-                fontFamily: 'Poppins',
-                color: Colors.white,
-                fontWeight: FontWeight.w600,
-              ),
-              iconColor: Color.fromARGB(255, 63, 93, 79),
+        child: Expanded(
+          child: SingleChildScrollView(
+            scrollDirection: Axis.horizontal,
+            physics: BouncingScrollPhysics(),
+            child: GNav(
+              gap: 5,
+              activeColor: Colors.white,
+              tabBackgroundColor: Color.fromARGB(255, 63, 93, 79),
+              padding: EdgeInsets.symmetric(horizontal: 20, vertical: 13.5),
+              selectedIndex: selectedIndex,
+              onTabChange: _onItemTapped,
+              tabs: const [
+                GButton(
+                  icon: CupertinoIcons.house_fill,
+                  iconSize: 35,
+                  text: 'Beranda',
+                  textStyle: TextStyle(
+                    fontSize: 16,
+                    fontFamily: 'Poppins',
+                    color: Colors.white,
+                    fontWeight: FontWeight.w600,
+                  ),
+                  iconColor: Color.fromARGB(255, 63, 93, 79),
+                ),
+                GButton(
+                  icon: CupertinoIcons.search,
+                  iconSize: 35,
+                  text: 'Cari',
+                  textStyle: TextStyle(
+                    fontSize: 16,
+                    fontFamily: 'Poppins',
+                    color: Colors.white,
+                    fontWeight: FontWeight.w600,
+                  ),
+                  iconColor: Color.fromARGB(255, 63, 93, 79),
+                ),
+                GButton(
+                  icon: CupertinoIcons.chat_bubble,
+                  iconSize: 35,
+                  text: 'Pesan',
+                  textStyle: TextStyle(
+                    fontSize: 16,
+                    fontFamily: 'Poppins',
+                    color: Colors.white,
+                    fontWeight: FontWeight.w600,
+                  ),
+                  iconColor: Color.fromARGB(255, 63, 93, 79),
+                ),
+                GButton(
+                  icon: CupertinoIcons.person,
+                  iconSize: 35,
+                  text: 'Profil',
+                  textStyle: TextStyle(
+                    fontSize: 16,
+                    fontFamily: 'Poppins',
+                    color: Colors.white,
+                    fontWeight: FontWeight.w600,
+                  ),
+                  iconColor: Color.fromARGB(255, 63, 93, 79),
+                ),
+                GButton(
+                  icon: CupertinoIcons.person,
+                  iconSize: 35,
+                  text: 'Profil',
+                  textStyle: TextStyle(
+                    fontSize: 16,
+                    fontFamily: 'Poppins',
+                    color: Colors.white,
+                    fontWeight: FontWeight.w600,
+                  ),
+                  iconColor: Color.fromARGB(255, 63, 93, 79),
+                ),
+              ],
             ),
-            GButton(
-              icon: CupertinoIcons.search,
-              iconSize: 35,
-              text: 'Cari',
-              textStyle: TextStyle(
-                fontSize: 16,
-                fontFamily: 'Poppins',
-                color: Colors.white,
-                fontWeight: FontWeight.w600,
-              ),
-              iconColor: Color.fromARGB(255, 63, 93, 79),
-            ),
-            GButton(
-              icon: CupertinoIcons.chat_bubble,
-              iconSize: 35,
-              text: 'Pesan',
-              textStyle: TextStyle(
-                fontSize: 16,
-                fontFamily: 'Poppins',
-                color: Colors.white,
-                fontWeight: FontWeight.w600,
-              ),
-              iconColor: Color.fromARGB(255, 63, 93, 79),
-            ),
-            GButton(
-              icon: CupertinoIcons.person,
-              iconSize: 35,
-              text: 'Profil',
-              textStyle: TextStyle(
-                fontSize: 16,
-                fontFamily: 'Poppins',
-                color: Colors.white,
-                fontWeight: FontWeight.w600,
-              ),
-              iconColor: Color.fromARGB(255, 63, 93, 79),
-            ),
-          ],
+          ),
         ),
       ),
     );
