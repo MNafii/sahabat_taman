@@ -1,6 +1,7 @@
-// ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables, file_names
+// ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables, file_names, prefer_final_fields
 
 /* ---------------------------------- DEPENDENCIES ---------------------------------- */
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 /* ---------------------------------- PAGE ---------------------------------- */
@@ -16,6 +17,12 @@ class ParkOrder extends StatefulWidget {
 class ParkOrderState extends State<ParkOrder> {
   int? selectedOption;
   int? selectedOptionBayar;
+  String dropdownValue = 'Bu Hadi';
+  var _items = [
+    'Bu Hadi',
+    'Pak Hadi',
+  ];
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -119,6 +126,48 @@ class ParkOrderState extends State<ParkOrder> {
                         },
                       ),
                     ],
+                  ),
+
+                  // TITLE
+                  Container(
+                    alignment: Alignment.centerLeft,
+                    margin: EdgeInsets.only(top: 20),
+                    child: Text(
+                      'Siapa yang akan anda pesan?',
+                      style: TextStyle(
+                        fontFamily: 'Poppins',
+                        color: Colors.black54,
+                        fontSize: 18,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                  ),
+
+                  // Dropdown
+                  Container(
+                    width: MediaQuery.of(context).size.width,
+                    margin: EdgeInsets.only(top: 5),
+                    padding: EdgeInsets.all(10),
+                    decoration: BoxDecoration(
+                      color: Color.fromARGB(255, 225, 225, 225),
+                      borderRadius: BorderRadius.circular(15),
+                    ),
+                    child: DropdownButton(
+                      alignment: Alignment.center,
+                      value: dropdownValue,
+                      icon: Icon(CupertinoIcons.chevron_down),
+                      onChanged: (String? newValue) {
+                        setState(() {
+                          dropdownValue = newValue!;
+                        });
+                      },
+                      items: _items.map((String item) {
+                        return DropdownMenuItem(
+                          value: item,
+                          child: Text(item),
+                        );
+                      }).toList(),
+                    ),
                   ),
 
                   // DECOR

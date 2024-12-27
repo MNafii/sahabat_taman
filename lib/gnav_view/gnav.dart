@@ -146,18 +146,6 @@ class GnavState extends State<Gnav> {
                   ),
                   iconColor: Color.fromARGB(255, 63, 93, 79),
                 ),
-                GButton(
-                  icon: CupertinoIcons.person,
-                  iconSize: 35,
-                  text: 'Profil',
-                  textStyle: TextStyle(
-                    fontSize: 16,
-                    fontFamily: 'Poppins',
-                    color: Colors.white,
-                    fontWeight: FontWeight.w600,
-                  ),
-                  iconColor: Color.fromARGB(255, 63, 93, 79),
-                ),
               ],
             ),
           ),
