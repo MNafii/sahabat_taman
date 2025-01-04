@@ -1,13 +1,57 @@
-// ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables, file_names
+// ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables, file_names, avoid_print
 
 /* ---------------------------------- DEPENDENCIES ---------------------------------- */
+import 'dart:convert';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
 
 /* ---------------------------------- PAGE ---------------------------------- */
-
-class DesignPage extends StatelessWidget {
+class DesignPage extends StatefulWidget {
   const DesignPage({super.key});
+
+  @override
+  DesignPageState createState() => DesignPageState();
+}
+
+class DesignPageState extends State<DesignPage> {
+  // Deklarasi
+  List galeridata = [];
+  Future<void> getrecord() async {
+    String uri = "https://astroedu.site/api/galeries/";
+    try {
+      var response = await http.get(Uri.parse(uri));
+      if (response.statusCode == 200) {
+        print('Response body: ${response.body}');
+        var decodedResponse = jsonDecode(response.body);
+
+        // Sesuaikan dengan struktur data API
+        if (decodedResponse is Map<String, dynamic> &&
+            decodedResponse.containsKey('data')) {
+          setState(() {
+            galeridata = decodedResponse['data'];
+          });
+        } else if (decodedResponse is List) {
+          setState(() {
+            galeridata = decodedResponse;
+          });
+        } else {
+          print('Unexpected data structure: $decodedResponse');
+        }
+      } else {
+        print('Failed to fetch data. Status code: ${response.statusCode}');
+      }
+    } catch (e) {
+      print('Error: $e');
+    }
+  }
+
+  @override
+  void initState() {
+    getrecord();
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -59,106 +103,176 @@ class DesignPage extends StatelessWidget {
 
             // CONTENT
             Expanded(
-              child: ListView(
-                shrinkWrap: true,
-                physics: BouncingScrollPhysics(),
-                children: [
-                  // Text
-                  Container(
-                    padding: EdgeInsets.only(top: 20),
-                    width: MediaQuery.of(context).size.width,
-                    child: Text(
-                      'Vertical Garden',
-                      style: TextStyle(
-                          fontSize: 20,
-                          fontFamily: 'Poppins',
-                          fontWeight: FontWeight.w600,
-                          color: Colors.black54),
-                    ),
-                  ),
-
-                  // BOX
-                  Container(
-                    padding: EdgeInsets.all(15),
-                    margin: EdgeInsets.only(top: 3),
-                    decoration: BoxDecoration(
-                      color: Color.fromARGB(255, 63, 93, 79),
-                      borderRadius: BorderRadius.circular(20),
-                    ),
-
-                    // BOX CONTENT
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        // PIC
-                        Expanded(
-                          child: SingleChildScrollView(
-                            scrollDirection: Axis.horizontal,
-                            child: Row(
-                              children: [
-                                Padding(
-                                  padding: EdgeInsets.only(right: 10),
-                                  child: ClipRRect(
-                                    borderRadius: BorderRadius.circular(15),
-                                    child: Image.asset(
-                                      'asset/images/des3.png',
-                                      height: 100,
-                                      width: 90,
-                                      fit: BoxFit.cover,
-                                    ),
-                                  ),
-                                ),
-                                Padding(
-                                  padding: EdgeInsets.only(right: 10),
-                                  child: ClipRRect(
-                                    borderRadius: BorderRadius.circular(15),
-                                    child: Image.asset(
-                                      'asset/images/des3.png',
-                                      height: 100,
-                                      width: 90,
-                                      fit: BoxFit.cover,
-                                    ),
-                                  ),
-                                ),
-                                Padding(
-                                  padding: EdgeInsets.only(right: 10),
-                                  child: ClipRRect(
-                                    borderRadius: BorderRadius.circular(15),
-                                    child: Image.asset(
-                                      'asset/images/des1.png',
-                                      height: 100,
-                                      width: 90,
-                                      fit: BoxFit.cover,
-                                    ),
-                                  ),
-                                ),
-                                Padding(
-                                  padding: EdgeInsets.only(right: 10),
-                                  child: ClipRRect(
-                                    borderRadius: BorderRadius.circular(15),
-                                    child: Image.asset(
-                                      'asset/images/des2.png',
-                                      height: 100,
-                                      width: 90,
-                                      fit: BoxFit.cover,
-                                    ),
-                                  ),
-                                ),
-                              ],
+              child: galeridata.isEmpty
+                  ? const Center(child: CircularProgressIndicator())
+                  : ListView.builder(
+                      itemCount: galeridata.length,
+                      itemBuilder: (context, index) {
+                        return Column(
+                          children: [
+                            // Text
+                            Container(
+                              padding: EdgeInsets.only(top: 20),
+                              width: MediaQuery.of(context).size.width,
+                              child: Text(
+                                galeridata[index]["nama"] ?? "Tidak ada judul",
+                                style: TextStyle(
+                                    fontSize: 20,
+                                    fontFamily: 'Poppins',
+                                    fontWeight: FontWeight.w600,
+                                    color: Colors.black54),
+                              ),
                             ),
-                          ),
-                        ),
 
-                        // ICON
-                        Icon(
-                          CupertinoIcons.chevron_right_2,
-                          color: Colors.white,
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
-              ),
+                            // BOX
+                            Container(
+                              padding: EdgeInsets.all(15),
+                              margin: EdgeInsets.only(top: 3),
+                              decoration: BoxDecoration(
+                                color: Color.fromARGB(255, 63, 93, 79),
+                                borderRadius: BorderRadius.circular(20),
+                              ),
+
+                              // BOX CONTENT
+                              child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  // PIC
+                                  Expanded(
+                                    child: SingleChildScrollView(
+                                      scrollDirection: Axis.horizontal,
+                                      child: Row(
+                                        children: [
+                                          Padding(
+                                            padding: EdgeInsets.only(right: 10),
+                                            child: ClipRRect(
+                                              borderRadius:
+                                                  BorderRadius.circular(15),
+                                              child: Image.asset(
+                                                'asset/images/des3.png',
+                                                height: 100,
+                                                width: 90,
+                                                fit: BoxFit.cover,
+                                              ),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+
+                                  // ICON
+                                  Icon(
+                                    CupertinoIcons.chevron_right_2,
+                                    color: Colors.white,
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ],
+                        );
+                      }),
+              // child: ListView(
+              //   shrinkWrap: true,
+              //   physics: BouncingScrollPhysics(),
+              //   children: [
+              //     // Text
+              //     Container(
+              //       padding: EdgeInsets.only(top: 20),
+              //       width: MediaQuery.of(context).size.width,
+              //       child: Text(
+              //         galeridata[index]["nama"] ?? "Tidak ada nama",
+              //         style: TextStyle(
+              //             fontSize: 20,
+              //             fontFamily: 'Poppins',
+              //             fontWeight: FontWeight.w600,
+              //             color: Colors.black54),
+              //       ),
+              //     ),
+
+              //     // BOX
+              //     Container(
+              //       padding: EdgeInsets.all(15),
+              //       margin: EdgeInsets.only(top: 3),
+              //       decoration: BoxDecoration(
+              //         color: Color.fromARGB(255, 63, 93, 79),
+              //         borderRadius: BorderRadius.circular(20),
+              //       ),
+
+              //       // BOX CONTENT
+              //       child: Row(
+              //         mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              //         children: [
+              //           // PIC
+              //           Expanded(
+              //             child: SingleChildScrollView(
+              //               scrollDirection: Axis.horizontal,
+              //               child: Row(
+              //                 children: [
+              //                   Padding(
+              //                     padding: EdgeInsets.only(right: 10),
+              //                     child: ClipRRect(
+              //                       borderRadius: BorderRadius.circular(15),
+              //                       child: Image.asset(
+              //                         'asset/images/des3.png',
+              //                         height: 100,
+              //                         width: 90,
+              //                         fit: BoxFit.cover,
+              //                       ),
+              //                     ),
+              //                   ),
+              //                   Padding(
+              //                     padding: EdgeInsets.only(right: 10),
+              //                     child: ClipRRect(
+              //                       borderRadius: BorderRadius.circular(15),
+              //                       child: Image.asset(
+              //                         'asset/images/des3.png',
+              //                         height: 100,
+              //                         width: 90,
+              //                         fit: BoxFit.cover,
+              //                       ),
+              //                     ),
+              //                   ),
+              //                   Padding(
+              //                     padding: EdgeInsets.only(right: 10),
+              //                     child: ClipRRect(
+              //                       borderRadius: BorderRadius.circular(15),
+              //                       child: Image.asset(
+              //                         'asset/images/des1.png',
+              //                         height: 100,
+              //                         width: 90,
+              //                         fit: BoxFit.cover,
+              //                       ),
+              //                     ),
+              //                   ),
+              //                   Padding(
+              //                     padding: EdgeInsets.only(right: 10),
+              //                     child: ClipRRect(
+              //                       borderRadius: BorderRadius.circular(15),
+              //                       child: Image.asset(
+              //                         'asset/images/des2.png',
+              //                         height: 100,
+              //                         width: 90,
+              //                         fit: BoxFit.cover,
+              //                       ),
+              //                     ),
+              //                   ),
+              //                 ],
+              //               ),
+              //             ),
+              //           ),
+
+              //           // ICON
+              //           Icon(
+              //             CupertinoIcons.chevron_right_2,
+              //             color: Colors.white,
+              //           ),
+              //         ],
+              //       ),
+              //     ),
+              //   ],
+              // ),
             ),
           ],
         ),

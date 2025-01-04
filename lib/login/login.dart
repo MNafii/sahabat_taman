@@ -1,9 +1,11 @@
-// ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
+// ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables, avoid_print, use_build_context_synchronously
 
 import 'package:flutter/material.dart';
+import 'dart:convert';
 
 /* ------------------------------ DEPENDENCIES ------------------------------ */
 import 'package:flutter/cupertino.dart';
+import 'package:http/http.dart' as http;
 
 /* ------------------------------ PAGE ------------------------------ */
 import 'package:sahabat_taman/gnav_view/gnav.dart';
@@ -23,6 +25,36 @@ class LoginState extends State<Login> {
     setState(() {
       _obscureText = !_obscureText;
     });
+  }
+
+  TextEditingController email = TextEditingController();
+  TextEditingController password = TextEditingController();
+
+  Future<void> insertrecord() async {
+    if (email.text.isNotEmpty && password.text.isNotEmpty) {
+      try {
+        String uri = "https://astroedu.site/api/login";
+
+        var res = await http.post(Uri.parse(uri),
+            headers: {"Content-Type": "application/json"},
+            body: jsonEncode({
+              "email": email.text,
+              "password": password.text,
+            }));
+
+        if (jsonDecode(res.body)['status'] == 200) {
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => Gnav()),
+          );
+        } else {}
+        print(jsonDecode(res.body));
+      } catch (e) {
+        print(e);
+      }
+    } else {
+      print('isi object');
+    }
   }
 
   @override
@@ -82,34 +114,34 @@ class LoginState extends State<Login> {
                   ),
 
                   // TEXT FIELD
-                  Align(
-                    alignment: Alignment.centerLeft,
-                    child: Text(
-                      'Username',
-                      style: TextStyle(
-                        fontSize: 18,
-                        fontWeight: FontWeight.bold,
-                        fontFamily: 'Poppins',
-                      ),
-                    ),
-                  ),
-                  Container(
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(15),
-                    ),
-                    padding: EdgeInsets.symmetric(
-                      horizontal: 10,
-                    ),
-                    margin: EdgeInsets.only(top: 5, bottom: 20),
-                    child: TextField(
-                      decoration: InputDecoration(
-                        hintText: 'Username',
-                        border: InputBorder.none,
-                        prefixIcon: Icon(Icons.person),
-                      ),
-                    ),
-                  ),
+                  // Align(
+                  //   alignment: Alignment.centerLeft,
+                  //   child: Text(
+                  //     'Username',
+                  //     style: TextStyle(
+                  //       fontSize: 18,
+                  //       fontWeight: FontWeight.bold,
+                  //       fontFamily: 'Poppins',
+                  //     ),
+                  //   ),
+                  // ),
+                  // Container(
+                  //   decoration: BoxDecoration(
+                  //     color: Colors.white,
+                  //     borderRadius: BorderRadius.circular(15),
+                  //   ),
+                  //   padding: EdgeInsets.symmetric(
+                  //     horizontal: 10,
+                  //   ),
+                  //   margin: EdgeInsets.only(top: 5, bottom: 20),
+                  //   child: TextFormField(
+                  //     decoration: InputDecoration(
+                  //       hintText: 'Username',
+                  //       border: InputBorder.none,
+                  //       prefixIcon: Icon(Icons.person),
+                  //     ),
+                  //   ),
+                  // ),
 
                   // EMAIL FIELD
                   Align(
@@ -132,7 +164,8 @@ class LoginState extends State<Login> {
                       horizontal: 10,
                     ),
                     margin: EdgeInsets.only(top: 5, bottom: 20),
-                    child: TextField(
+                    child: TextFormField(
+                      controller: email,
                       decoration: InputDecoration(
                         prefixIcon: Icon(Icons.email),
                         hintText: 'Email',
@@ -162,7 +195,8 @@ class LoginState extends State<Login> {
                       horizontal: 10,
                     ),
                     margin: EdgeInsets.only(top: 5, bottom: 20),
-                    child: TextField(
+                    child: TextFormField(
+                      controller: password,
                       decoration: InputDecoration(
                         hintText: 'Password',
                         border: InputBorder.none,
@@ -183,10 +217,7 @@ class LoginState extends State<Login> {
                   // LOGIN BUTTON
                   GestureDetector(
                     onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (context) => Gnav()),
-                      );
+                      insertrecord();
                     },
                     child: Container(
                       height: 50,

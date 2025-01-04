@@ -1,12 +1,14 @@
-// ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
+// ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables, avoid_print, use_build_context_synchronously
 
 import 'package:flutter/material.dart';
+import 'dart:convert';
 
 /* ------------------------------ DEPENDENCIES ------------------------------ */
 import 'package:flutter/cupertino.dart';
+import 'package:http/http.dart' as http;
 
 /* ------------------------------ PAGE ------------------------------ */
-import 'package:sahabat_taman/gnav_view/gnav.dart';
+// import 'package:sahabat_taman/gnav_view/gnav.dart';
 import 'package:sahabat_taman/login/login.dart';
 
 class Register extends StatefulWidget {
@@ -23,6 +25,44 @@ class RegisterState extends State<Register> {
     setState(() {
       _obscureText = !_obscureText;
     });
+  }
+
+  TextEditingController username = TextEditingController();
+  TextEditingController email = TextEditingController();
+  TextEditingController password = TextEditingController();
+  TextEditingController passwordConfirmation = TextEditingController();
+
+  Future<void> insertrecord() async {
+    if (username.text.isNotEmpty &&
+        email.text.isNotEmpty &&
+        password.text.isNotEmpty) {
+      try {
+        String uri = "https://astroedu.site/api/register";
+
+        var res = await http.post(Uri.parse(uri),
+            headers: {"Content-Type": "application/json"},
+            body: jsonEncode({
+              "username": username.text,
+              "email": email.text,
+              "password": password.text,
+              "password_confirmation": passwordConfirmation.text,
+            }));
+
+        if (jsonDecode(res.body)['status'] == 200) {
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => Login()),
+          );
+        } else {
+
+        }
+        print(jsonDecode(res.body));
+      } catch (e) {
+        print(e);
+      }
+    } else {
+      print('isi object');
+    }
   }
 
   @override
@@ -101,6 +141,7 @@ class RegisterState extends State<Register> {
                     ),
                     margin: EdgeInsets.only(top: 5, bottom: 20),
                     child: TextField(
+                      controller: username,
                       decoration: InputDecoration(
                         hintText: 'Username',
                         border: InputBorder.none,
@@ -131,6 +172,7 @@ class RegisterState extends State<Register> {
                     ),
                     margin: EdgeInsets.only(top: 5, bottom: 20),
                     child: TextField(
+                      controller: email,
                       decoration: InputDecoration(
                         prefixIcon: Icon(Icons.email),
                         hintText: 'Email',
@@ -161,6 +203,7 @@ class RegisterState extends State<Register> {
                     ),
                     margin: EdgeInsets.only(top: 5, bottom: 20),
                     child: TextField(
+                      controller: password,
                       decoration: InputDecoration(
                         hintText: 'Password',
                         border: InputBorder.none,
@@ -200,6 +243,7 @@ class RegisterState extends State<Register> {
                     ),
                     margin: EdgeInsets.only(top: 5, bottom: 20),
                     child: TextField(
+                      controller: passwordConfirmation,
                       decoration: InputDecoration(
                         hintText: 'Retype Password',
                         border: InputBorder.none,
@@ -220,10 +264,11 @@ class RegisterState extends State<Register> {
                   // REGISTER BUTTON
                   GestureDetector(
                     onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (context) => Gnav()),
-                      );
+                      insertrecord();
+                      // Navigator.push(
+                      //   context,
+                      //   MaterialPageRoute(builder: (context) => Login()),
+                      // );
                     },
                     child: Container(
                       height: 50,

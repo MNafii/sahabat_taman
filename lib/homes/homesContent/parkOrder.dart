@@ -1,8 +1,10 @@
-// ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables, file_names, prefer_final_fields
+// ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables, file_names, prefer_final_fields, avoid_print
 
+import 'package:flutter/material.dart';
+import 'dart:convert';
 /* ---------------------------------- DEPENDENCIES ---------------------------------- */
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
 
 /* ---------------------------------- PAGE ---------------------------------- */
 import 'package:sahabat_taman/gnav_view/gnav.dart';
@@ -17,11 +19,44 @@ class ParkOrder extends StatefulWidget {
 class ParkOrderState extends State<ParkOrder> {
   int? selectedOption;
   int? selectedOptionBayar;
-  String dropdownValue = 'Bu Hadi';
-  var _items = [
-    'Bu Hadi',
-    'Pak Hadi',
-  ];
+
+  List userdata = [];
+  var dropdownvalue;
+  Future<void> getrecord() async {
+    String uri = "https://astroedu.site/api/tukangs/";
+    // Deklarasi
+    try {
+      var response = await http.get(Uri.parse(uri));
+      if (response.statusCode == 200) {
+        print('Response body: ${response.body}');
+        var decodedResponse = jsonDecode(response.body);
+
+        // Sesuaikan dengan struktur data API
+        if (decodedResponse is Map<String, dynamic> &&
+            decodedResponse.containsKey('data')) {
+          setState(() {
+            userdata = decodedResponse['data'];
+          });
+        } else if (decodedResponse is List) {
+          setState(() {
+            userdata = decodedResponse;
+          });
+        } else {
+          print('Unexpected data structure: $decodedResponse');
+        }
+      } else {
+        print('Failed to fetch data. Status code: ${response.statusCode}');
+      }
+    } catch (e) {
+      print('Error: $e');
+    }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    getrecord();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -153,18 +188,19 @@ class ParkOrderState extends State<ParkOrder> {
                       borderRadius: BorderRadius.circular(15),
                     ),
                     child: DropdownButton(
+                      hint: Text('Pilih Tukang'),
                       alignment: Alignment.center,
-                      value: dropdownValue,
+                      value: dropdownvalue,
                       icon: Icon(CupertinoIcons.chevron_down),
-                      onChanged: (String? newValue) {
+                      onChanged: (newVal) {
                         setState(() {
-                          dropdownValue = newValue!;
+                          dropdownvalue = newVal;
                         });
                       },
-                      items: _items.map((String item) {
+                      items: userdata.map((item) {
                         return DropdownMenuItem(
-                          value: item,
-                          child: Text(item),
+                          value: item['id'],
+                          child: Text(item['nama'].toString()),
                         );
                       }).toList(),
                     ),
