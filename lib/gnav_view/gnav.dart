@@ -86,7 +86,7 @@ class GnavState extends State<Gnav> {
         ),
         height: 70,
         // GNAV ICON
-        child: Expanded(
+        child: Center(
           child: SingleChildScrollView(
             scrollDirection: Axis.horizontal,
             physics: BouncingScrollPhysics(),
@@ -101,7 +101,7 @@ class GnavState extends State<Gnav> {
                 GButton(
                   icon: CupertinoIcons.house_fill,
                   iconSize: 35,
-                  text: 'Beranda',
+                  // text: 'Beranda',
                   textStyle: TextStyle(
                     fontSize: 16,
                     fontFamily: 'Poppins',
@@ -113,7 +113,7 @@ class GnavState extends State<Gnav> {
                 GButton(
                   icon: CupertinoIcons.search,
                   iconSize: 35,
-                  text: 'Cari',
+                  // text: 'Cari',
                   textStyle: TextStyle(
                     fontSize: 16,
                     fontFamily: 'Poppins',
@@ -125,7 +125,7 @@ class GnavState extends State<Gnav> {
                 GButton(
                   icon: CupertinoIcons.chat_bubble,
                   iconSize: 35,
-                  text: 'Pesan',
+                  // text: 'Pesan',
                   textStyle: TextStyle(
                     fontSize: 16,
                     fontFamily: 'Poppins',
@@ -137,7 +137,7 @@ class GnavState extends State<Gnav> {
                 GButton(
                   icon: CupertinoIcons.person,
                   iconSize: 35,
-                  text: 'Profil',
+                  // text: 'Profil',
                   textStyle: TextStyle(
                     fontSize: 16,
                     fontFamily: 'Poppins',
